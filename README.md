@@ -11,14 +11,22 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.sembozdemir:PermissionsKt:1.0.0'
+    implementation 'com.github.sembozdemir:PermissionsKt:1.0.0'
 }
 ```
 
 
 ## How to use
 
-- #### It is so simple. Just ask for permission you want anywhere on your Activity
+- #### Prepare Manifest
+
+Add the permission to `AndroidManifest.xml`.
+
+`<uses-permission android:name="android.permission.CAMERA"/>`
+
+- #### Ask for permission 
+
+It is so simple. Just ask for permission you want anywhere on your Activity.
 
 ```
 askPermissions(Manifest.permission.CAMERA) {
@@ -28,7 +36,9 @@ askPermissions(Manifest.permission.CAMERA) {
 }
 ```
 
-- #### Then, call delegated extension function on [onRequestPermissionsResult]
+- #### Call delegated function
+
+Call delegated extension function on `onRequestPermissionsResult`.
 
 ```
 override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -36,7 +46,9 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
 }
 ```
 
-- #### You may also listen other callbacks
+- #### Other callbacks
+
+You may also listen `onDenied`, `onShowRationale`, `onNeverAskAgain` callbacks if you need. Call `request.retry()` on action after showing rationale message on `onShowRationale`.
 
 ```
 askPermissions(Manifest.permission.CAMERA) {
@@ -60,7 +72,9 @@ askPermissions(Manifest.permission.CAMERA) {
 }
 ```
 
-- #### You may also ask for multiple permissions
+- #### Multiple permissions 
+
+You may also ask for multiple permissions at the same time.
 
 ```
 askPermissions(Manifest.permission.CALL_PHONE, Manifest.permission.READ_SMS) {
@@ -94,6 +108,8 @@ askPermissions(Manifest.permission.CALL_PHONE, Manifest.permission.READ_SMS) {
     }
 }
 ```
+
+---
 
 You could view `sample` module for more details.
 
