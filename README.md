@@ -23,8 +23,16 @@ dependencies {
 ```
 askPermissions(Manifest.permission.CAMERA) {
     onGranted {
-        Toast.makeText(this, "Camera permission is granted.", Toast.LENGTH_LONG).show()
+        showCamera()
     }
+}
+```
+
+- #### Then, call delegated extension function on [onRequestPermissionsResult]
+
+```
+override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    handlePermissionsResult(requestCode, permissions, grantResults)
 }
 ```
 
@@ -33,11 +41,11 @@ askPermissions(Manifest.permission.CAMERA) {
 ```
 askPermissions(Manifest.permission.CAMERA) {
     onGranted {
-        Toast.makeText(this, "Camera permission is granted.", Toast.LENGTH_LONG).show()
+        showCamera()
     }
 
     onDenied {
-        Toast.makeText(this, "Camera permission is denied.", Toast.LENGTH_LONG).show()
+        Log.d(TAG, "Camera permission is denied.")
     }
 
     onShowRationale { request ->
@@ -47,7 +55,7 @@ askPermissions(Manifest.permission.CAMERA) {
     }
 
     onNeverAskAgain {
-        Toast.makeText(this, "Never ask again for camera permission", Toast.LENGTH_LONG).show()
+        Log.d(TAG, "Never ask again for Camera permission")
     }
 }
 ```
@@ -57,50 +65,37 @@ askPermissions(Manifest.permission.CAMERA) {
 ```
 askPermissions(Manifest.permission.CALL_PHONE, Manifest.permission.READ_SMS) {
     onGranted {
-        Toast.makeText(this, "Call Phone and Read Sms permission is granted.", Toast.LENGTH_LONG).show()
+        makeCall()
+        sendSms()
     }
 
-    onDenied {
-        it.forEach {
+    onDenied { permissions ->
+        permissions.forEach {
             when (it) {
-                Manifest.permission.CALL_PHONE -> 
-                    Toast.makeText(this, "Call Phone is denied", Toast.LENGTH_LONG).show()
-                Manifest.permission.READ_SMS -> 
-                    Toast.makeText(this, "Read Sms is denied", Toast.LENGTH_LONG).show()
+                Manifest.permission.CALL_PHONE -> Log.d(TAG, "Call Phone is denied")
+                Manifest.permission.READ_SMS -> Log.d(TAG, "Read Sms is denied")
             }
         }
     }
 
     onShowRationale { request ->
-
-        var permissions = ""
-        request.permissions.forEach {
-
-            permissions += when (it) {
-                Manifest.permission.CALL_PHONE -> " Call Phone"
-                Manifest.permission.READ_SMS -> " Read Sms"
-                else -> ""
-            }
-
-        }
-
-        Snackbar.make(rootView, "You should grant permission for $permissions", Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(rootView, "You should grant Call Phone and Read Sms permissions, Snackbar.LENGTH_INDEFINITE)
                 .setAction("Retry") { request.retry() }
                 .show()
     }
 
-    onNeverAskAgain {
-        it.forEach {
+    onNeverAskAgain { permissions ->
+        permissions.forEach {
             when (it) {
-                Manifest.permission.CALL_PHONE -> 
-                    Toast.makeText(this, "Never ask again for Call Phone", Toast.LENGTH_LONG).show()
-                Manifest.permission.READ_SMS -> 
-                    Toast.makeText(this, "Never ask again for Read Sms", Toast.LENGTH_LONG).show()
+                Manifest.permission.CALL_PHONE -> Log.d(TAG, "Never ask again for Call Phone")
+                Manifest.permission.READ_SMS -> Log.d(TAG, "Never ask again for Read Sms")
             }
         }
     }
 }
 ```
+
+You could view `sample` module for more details.
 
 ## Licence
 The MIT License (MIT)
